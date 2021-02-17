@@ -4,6 +4,7 @@ import org.example.config.ObjectMapperConfig;
 import org.example.domain.PhoneBookItem;
 import org.example.service.PhoneBookItemService;
 import org.example.transfer.CreateItemRequest;
+import org.example.transfer.UpdateItemRequest;
 
 import javax.servlet.ServletException;
 import javax.servlet.annotation.WebServlet;
@@ -41,6 +42,20 @@ public class PhoneBookItemServlet extends HttpServlet {
             resp.getWriter().flush();
             resp.getWriter().close();
 
+        } catch (SQLException | ClassNotFoundException e) {
+            resp.sendError(500, "Internal server error: " + e.getMessage());
+        }
+    }
+
+    @Override
+    protected void doPut(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
+
+        String id = req.getParameter("id");
+
+        UpdateItemRequest request = ObjectMapperConfig.getObjectMapper().readValue(req.getReader(), UpdateItemRequest.class);
+
+        try {
+            phoneBookItemService.updatePhoneBookItem(Long.parseLong(id), request);
         } catch (SQLException | ClassNotFoundException e) {
             resp.sendError(500, "Internal server error: " + e.getMessage());
         }
