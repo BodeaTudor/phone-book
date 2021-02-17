@@ -10,7 +10,7 @@ import java.util.List;
 
 public class PhoneBookItemRepository {
 
-    public void createItem(String firstName, String lastName, String phoneNumber) throws SQLException, IOException, ClassNotFoundException {
+    public void createItem(String firstName, String lastName, int phoneNumber) throws SQLException, IOException, ClassNotFoundException {
         String insertSql = "INSERT INTO phone_book_items(first_name, last_name, phone_number) VALUES (?,?,?)";
 
         try (Connection connection = DatabaseConfig.getConnection();
@@ -18,7 +18,7 @@ public class PhoneBookItemRepository {
         ) {
             preparedStatement.setString(1, firstName);
             preparedStatement.setString(2, lastName);
-            preparedStatement.setString(3, phoneNumber);
+            preparedStatement.setInt(3, phoneNumber);
 
             preparedStatement.executeUpdate();
         }
@@ -48,29 +48,15 @@ public class PhoneBookItemRepository {
         }
     }
 
-    public void updateItem(long id, String phoneNumber) throws SQLException, IOException, ClassNotFoundException {
+    public void updateItem(long id, int phoneNumber) throws SQLException, IOException, ClassNotFoundException {
 
         String sql = "UPDATE phone_book_items SET phone_number = ? WHERE id = ? ";
 
         try (Connection connection = DatabaseConfig.getConnection();
              PreparedStatement preparedStatement = connection.prepareStatement(sql)
         ) {
-            preparedStatement.setString(1, phoneNumber);
+            preparedStatement.setInt(1, phoneNumber);
             preparedStatement.setLong(2, id);
-
-            preparedStatement.executeUpdate();
-        }
-    }
-
-    public void deleteItem(long id) throws SQLException, IOException, ClassNotFoundException {
-
-        String sql = "DELETE FROM phone_book_items WHERE id = ?";
-
-        try (Connection connection = DatabaseConfig.getConnection();
-             PreparedStatement preparedStatement = connection.prepareStatement(sql)
-
-        ) {
-            preparedStatement.setLong(1, id);
 
             preparedStatement.executeUpdate();
         }
