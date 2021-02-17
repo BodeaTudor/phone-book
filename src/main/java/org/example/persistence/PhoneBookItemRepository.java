@@ -61,4 +61,18 @@ public class PhoneBookItemRepository {
             preparedStatement.executeUpdate();
         }
     }
+
+    public void deleteItem(long id) throws SQLException, IOException, ClassNotFoundException {
+
+        String sql = "DELETE FROM phone_book_items WHERE id = ?";
+
+        try (Connection connection = DatabaseConfig.getConnection();
+             PreparedStatement preparedStatement = connection.prepareStatement(sql)
+
+        ) {
+            preparedStatement.setLong(1, id);
+
+            preparedStatement.executeUpdate();
+        }
+    }
 }
