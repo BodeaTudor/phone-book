@@ -22,6 +22,7 @@ public class PhoneBookItemServlet extends HttpServlet {
 
     @Override
     protected void doPost(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
+        setAccessControlHeaders(resp);
 
         CreateItemRequest request = ObjectMapperConfig.getObjectMapper().readValue(req.getReader(), CreateItemRequest.class);
 
@@ -34,6 +35,8 @@ public class PhoneBookItemServlet extends HttpServlet {
 
     @Override
     protected void doGet(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
+        setAccessControlHeaders(resp);
+
         try {
             List<PhoneBookItem> phoneBookItems = phoneBookItemService.getPhoneBookItems();
             String responseJson = ObjectMapperConfig.getObjectMapper().writeValueAsString(phoneBookItems);
@@ -49,6 +52,7 @@ public class PhoneBookItemServlet extends HttpServlet {
 
     @Override
     protected void doPut(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
+        setAccessControlHeaders(resp);
 
         String id = req.getParameter("id");
 
@@ -63,6 +67,7 @@ public class PhoneBookItemServlet extends HttpServlet {
 
     @Override
     protected void doDelete(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
+        setAccessControlHeaders(resp);
 
         String id = req.getParameter("id");
 
@@ -71,5 +76,16 @@ public class PhoneBookItemServlet extends HttpServlet {
         } catch (SQLException | ClassNotFoundException e) {
             resp.sendError(500, "Internal server error: " + e.getMessage());
         }
+    }
+
+    @Override
+    protected void doOptions(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
+        setAccessControlHeaders(resp);
+    }
+
+    private void setAccessControlHeaders(HttpServletResponse resp) {
+        resp.setHeader("Access-Control-Allow-Origin", "*");
+        resp.setHeader("Access-Control-Allow-Methods", "POST,GET,PUT,DELETE");
+        resp.setHeader("Access-Control-Allow-Headers", "content-type");
     }
 }
